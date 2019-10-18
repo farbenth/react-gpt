@@ -450,22 +450,11 @@ class Bling extends Component {
 
         if (shouldRefresh) {
             this.configureSlot(this._adSlot, nextProps);
+            this.refresh();
+            return false;
         }
-
-        if (Bling._adManager._syncCorrelator) {
-            if (shouldRefresh) {
-                Bling._adManager.refresh();
-            } else if (shouldRender || isScriptLoaded) {
-                Bling._adManager.renderAll();
-            }
-        } else {
-            if (shouldRefresh) {
-                this.refresh();
-                return false;
-            }
-            if (shouldRender || isScriptLoaded) {
-                return true;
-            }
+        if (shouldRender || isScriptLoaded) {
+            return true;
         }
 
         return false;
@@ -718,12 +707,6 @@ class Bling extends Component {
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
         } else {
-            if (
-                !Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._syncCorrelator
-            ) {
-                Bling._adManager.updateCorrelator();
-            }
             Bling._adManager.googletag.display(divId);
             if (
                 Bling._adManager._disableInitialLoad &&
